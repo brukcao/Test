@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>写日志</title>
+<script src="js/jquery-3.2.0.min.js"></script>
+<script type="text/javascript">
+function btnClick(){
+	var url = "http://localhost:8080/diary_web/insertDiaryServlet";
+	var _name = $("#d_name").val();
+	var _content = $("#d_content").val();
+	var _pri = $('input:radio[name="d_pri"]:checked').val();
+	
+	alert(_name+_content+_pri);
+	$.ajax({
+		type:'post',
+		url:url,
+		dataType:"json",
+		//data:传递的结果
+		//http://localhost:8080/ajaxweb/secondServlet?name=aaaa
+		data:{
+			d_name : _name,
+			d_content : _content,
+			d_pri : _pri
+		},
+		success: function (data) {
+			alert("::::"+data.isSuccess);
+			if(data.isSuccess == "success"){
+				alert("添加成功");
+				location.href = "main.html";
+			}else{
+				alert("添加失败");
+				location.href = "writer.html";
+			}
+		},
+		error: function (data) {
+			alert(data.isSuccess);
+			//alert(_name+" "+_pass);
+		     alert("error");	    
+		}
+		});  
+}
+</script>
+</head>
+<body>
+<div>写日志</div>
+<div>
+内容
+<input type="text" name="d_name" id="d_name"><p>
+<textarea rows="50" cols="30" name="d_content" id="d_content"></textarea><p>
+<input type="radio" name="d_pri" id="d_pri" value="0" checked="checked">公开
+<input type="radio" name="d_pri" id="d_pri" value="1">私人<p> 
+<button onclick="btnClick()">确认</button>
+</div>
+</body>
+</html>

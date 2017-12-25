@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>修改日志</title>
+<script src="js/jquery-3.2.0.min.js"></script>
+<script type="text/javascript">
+//查看日志，必须要获得传入的url的param  d_id
+function getQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+
+$(function(){
+	var url = "checkDiaryServlet";
+	$.ajax({
+		type:'get',
+		url:url,
+		dataType:"json",
+		//data:传递的结果
+		//http://localhost:8080/ajaxweb/secondServlet?name=aaaa
+		data:{
+			d_id : getQueryString("d_id")
+		},
+		success: function (data) {
+			if(data.isSuccess == "success"){
+				$("#d_name").val(data.diary.d_name);
+				$("#d_content").val(data.diary.d_content);
+			}
+		},
+		error: function (data) {
+			alert(data.isSuccess);
+			//alert(_name+" "+_pass);
+		     alert("error");	    
+		}
+		});  
+});
+
+function editBtn(){
+	var url = "editDiaryServlet";
+	var _name = $("#d_name").val();
+	var _content = $("#d_content").val();
+	var _pri = $('input:radio[name="d_pri"]:checked').val();
+
+	$.ajax({
+		type:'post',
+		url:url,
+		dataType:"json",
+		//data:传递的结果
+		//http://localhost:8080/ajaxweb/secondServlet?name=aaaa
+		data:{
+			d_name : _name,
+			d_content : _content,
+			d_pri : _pri,
+			d_id : getQueryString("d_id")
+		},
+		success: function (data) {
+			if(data.isSuccess == "success"){
+				alert("修改成功");
+				location.href = "main.html";
+			}else{
+				alert("修改失败");
+				location.href = "writer.html";
+			}
+		},
+		error: function (data) {
+			alert(data.isSuccess);
+			//alert(_name+" "+_pass);
+		     alert("error");	    
+		}
+		});  
+}
+
+</script>
+</head>
+<body>
+<div>编辑日志</div>
+<div>
+内容
+<input type="text" name="d_name" id="d_name"><p>
+<textarea rows="30" cols="50" name="d_content" id="d_content"></textarea><p>
+<input type="radio" name="d_pri" id="d_pri" value="0" checked="checked">公开
+<input type="radio" name="d_pri" id="d_pri" value="1">私人<p> 
+<button onclick="editBtn()">确认</button>
+</div>
+</body>
+</html>

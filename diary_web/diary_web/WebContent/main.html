@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+		  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<title></title>
+	<script src="js/jquery-3.2.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+		<title>主页面</title>
+		<script type="text/javascript">
+		var id = 0;
+		$(
+		function(){
+			var url = "http://localhost:8080/diary_web/checkSessionServlet";
+			$.ajax({
+				type:'get',
+				url:url,
+				dataType:"json",
+				success: function (data) {
+					if(data.isSuccess != "success"){
+						alert("当前用户鉴权失败，退出");
+						location.href = "login.html";
+					}else{
+						id = data.user.u_id;
+						$("#s1").html(data.user.u_name);
+					}
+				},
+				error: function (data) {
+					alert(data.isSuccess);
+					//alert(_name+" "+_pass);
+				     alert("error");	    
+				}
+				});  
+		}		
+		);
+		
+		
+		function checkmyself(){
+			var url="http://localhost:8080/diary_web/checkAllMySelfDiaryServlet";
+			$.ajax({
+				type:'get',
+				url:url,
+				dataType:"json",
+				data:{
+					u_id:id
+				},
+				success: function (data) {
+					if(data.isSuccess == "success"){
+						
+						for(i = 0;i<data.diarys.length;i++){ 
+							$("#show").append("<tr><td>"+data.diarys[i].d_id+"</td><td>"+
+									data.diarys[i].d_name+"</td><td>"+
+									data.diarys[i].d_content+"</td><td>"+
+									data.diarys[i].d_dt+"</td><td>"+
+									data.diarys[i].d_pri+"</td><td>"+
+									"<a href='editor.html?d_id="+data.diarys[i].d_id+"'>修改</a>"+"</td><td>"+"<button onclick='delBtn("+data.diarys[i].d_id+")'>删除</button>"+"</td></tr>");
+						}
+					}
+				},
+				error: function (data) {
+					alert(data.isSuccess);
+					//alert(_name+" "+_pass);
+				     alert("error");	    
+				}
+				});  
+		}
+		
+		function checkothers(){
+			var url="http://localhost:8080/diary_web/checkAllOtherDiaryServlet";
+			$.ajax({
+				type:'get',
+				url:url,
+				dataType:"json",
+				data:{
+					u_id:id
+				},
+				success: function (data) {
+					if(data.isSuccess == "success"){
+						
+						for(i = 0;i<data.diarys.length;i++){ 
+							$("#show").append("<tr><td>"+data.diarys[i].d_id+"</td><td>"+
+									data.diarys[i].d_name+"</td><td>"+
+									data.diarys[i].d_content+"</td><td>"+
+									data.diarys[i].d_dt+"</td><td>"+
+									data.diarys[i].d_pri+"</td></tr>");
+						}
+					}
+				},
+				error: function (data) {
+					alert(data.isSuccess);
+					//alert(_name+" "+_pass);
+				     alert("error");	    
+				}
+				});  
+		}
+		
+		function delBtn(d_id){
+			var url="http://localhost:8080/diary_web/delDiaryServlet";
+			$.ajax({
+				type:'get',
+				url:url,
+				dataType:"json",
+				data:{
+					d_id:d_id
+				},
+				success: function (data) {
+					var x = window.confirm("确认删除吗?");
+					alert(x);
+					if(x==true){
+						if(data.isSuccess == "success"){
+							location.href = "main.html";
+						}
+					}
+					
+				},
+				error: function (data) {
+					alert(data.isSuccess);
+					//alert(_name+" "+_pass);
+				     alert("error");	    
+				}
+				}); 
+		}
+		</script>
+	</head>
+<body>
+<div>欢迎您！！！<span id="s1"></span></div>
+<div>
+<button onclick="checkmyself()" >查看自己所有的日志</button>&nbsp;&nbsp;&nbsp;
+<button onclick="checkothers()">查看其它人日志</button>&nbsp;&nbsp;&nbsp;
+<a href="writer.html">写日志</a>
+</div>
+<div id="show">
+<table class="table table-striped table-bordered table-hover">
+
+</table>
+</div>
+</body>
+</html>

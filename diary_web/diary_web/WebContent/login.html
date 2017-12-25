@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<title></title>
+	<script src="js/jquery-3.2.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+		<title>登录</title>
+		<script type="text/javascript">
+		
+		function loginBtn(){
+			var url = "http://localhost:8080/diary_web/loginServlet";
+			var _name = $("#username").val();
+			var _pass = $("#pass").val();
+			$.ajax({
+				type:'get',
+				url:url,
+				dataType:"json",
+				//data:传递的结果
+				//http://localhost:8080/ajaxweb/secondServlet?name=aaaa
+				data:{
+					username : _name,
+					pass : _pass
+				},
+				success: function (data) {
+					alert(data.isSuccess);
+					if(data.isSuccess == "success"){
+						alert("登录成功");
+						location.href = "main.html";
+					}else{
+						alert("登录失败");
+						location.href = "login.html";
+					}
+				},
+				error: function (data) {
+					alert(data.isSuccess);
+					//alert(_name+" "+_pass);
+				     alert("error");	    
+				}
+				});  
+		}
+		</script>
+	</head>
+	<body>
+	<div class="container">
+	<div align="center">远程博客系统DEMO</div>
+
+  <div class="form-group">
+    <label >用户名：</label>
+    <input type="text" class="form-control" id="username" name="username" placeholder="请输入您的登录名">
+  </div>
+  <div class="form-group">
+    <label for="pass">密码</label>
+    <input type="password" class="form-control" id="pass" name="pass" placeholder="请输入您的密码">
+  </div>
+  <button  class="btn btn-default" onclick="loginBtn()">登录</button>
+<button class="btn btn-default" onclick="registerBtn()">注册</button>
+	
+	</div>
+	</body>
+</html>
